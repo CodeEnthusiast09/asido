@@ -56,7 +56,7 @@ const InfoSection = () => {
   ];
 
   return (
-    <section className="px-[18px] lg:px-20 mb-[60px]">
+    <section className="px-[18px] lg:px-20 my-[60px]">
       <h3 className="text-sm md:text-2xl font-semibold text-primary-200 mb-2">
         Stay Informed
       </h3>

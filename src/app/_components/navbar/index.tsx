@@ -73,7 +73,7 @@ export const Navbar = () => {
 
       {/* Desktop Navbar */}
       <nav className="hidden w-full lg:flex items-center justify-between">
-        <ul className="flex items-center gap-12">
+        <ul className="flex items-center gap-10">
           {navItems.map((item: NavItem, index: number) => (
             <NavBarItem key={index} item={item} onClick={() => toggleNav()} />
           ))}

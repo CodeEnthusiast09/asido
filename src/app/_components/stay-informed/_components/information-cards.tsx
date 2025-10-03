@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { InfoCardProps } from "./types";
 import { FaChevronRight } from "react-icons/fa";
+import Link from "next/link";
 
 const InfoCard = ({ image, description }: InfoCardProps) => {
   return (
@@ -21,13 +22,13 @@ const InfoCard = ({ image, description }: InfoCardProps) => {
         <p className="text-foreground font-bold text-[15px] md:text-[25px] mb-auto leading-snug">
           {description}
         </p>
-        <a
+        <Link
           href="#"
           className="min-w-[130px] h-[33.14px] flex items-center font-bold text-nowrap text-primary-100 hover:no-underline cursor-pointer mt-[31.86px] md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 focus-visible:ring-offset-2 transition-colors"
         >
           READ MORE{" "}
           <FaChevronRight size={16} className="ml-3.5 md:w-5 md:h-5" />
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export const NavBarItem = ({ item, onClick }: NavBarItemProps) => {
         href={item.href}
         onClick={() => onClick()}
         className={clsx(
-          "w-full flex items-center lg:py-4 lg:px-6 duration-300 ease-in-out focus:outline-none text-primary-100 hover:text-primary-200 font-bold whitespace-nowrap",
+          "w-full flex items-center duration-300 ease-in-out focus:outline-none text-primary-100 hover:text-primary-200 font-bold whitespace-nowrap",
         )}
       >
         <span className="text-base font-regular">{item.name}</span>

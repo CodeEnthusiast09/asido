@@ -9,6 +9,7 @@
   --secondary-200: #fd372c;
   --secondary-300: #4abdcd;
   --secondary-400: #ababab;
+  --secondary-500: #f5f5fa;
 }
 
 @theme inline {
@@ -20,6 +21,7 @@
   --color-secondary-200: var(--secondary-200);
   --color-secondary-300: var(--secondary-300);
   --color-secondary-400: var(--secondary-400);
+  --color-secondary-500: var(--secondary-500);
 }
 
 body {

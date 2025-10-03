@@ -2,6 +2,7 @@ import Image from "next/image";
 import Footer from "./_components/footer";
 import { Navbar } from "./_components/navbar";
 import InfoSection from "./_components/stay-informed";
+import MileStone from "./_components/milestone";
 
 export default function Home() {
   return (
@@ -29,6 +30,8 @@ export default function Home() {
           quality={90}
         />
       </section>
+
+      <MileStone />
 
       <InfoSection />
 
