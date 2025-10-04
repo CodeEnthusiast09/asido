@@ -9,7 +9,7 @@ export default function Home() {
     <div className="overflow-hidden">
       <Navbar />
 
-      <section className="relative w-full h-[180px] md:h-[320px] lg:h-[420px] xl:h-[520px]">
+      <section className="relative w-full h-[180px] md:h-[320px] lg:h-[420px] xl:h-[520px] 2xl:h-[700px]">
         <Image
           alt="Asido Foundation team members at a mental health awareness event"
           src="/hero-image.png"

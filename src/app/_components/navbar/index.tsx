@@ -21,7 +21,7 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="bg-background w-full flex lg:flex-col items-center justify-between lg:px-[50px] lg:pt-8 xl:px-[165px]">
+    <header className="bg-background w-full flex lg:flex-col items-center justify-between lg:px-[50px] lg:pt-8 lg:pb-2.5 xl:px-[165px]">
       {/* Logo */}
       <div className="w-full flex items-center justify-between">
         <Link href="/" className="flex-shrink-0">
@@ -88,7 +88,7 @@ export const Navbar = () => {
           </Link>
           <LinkButton
             variant="secondary"
-            size="lg"
+            size="md"
             radius="rounded-xl"
             href="#"
             className="hidden !w-[115px] !px-4 !py-3 text-[16px] !font-bold lg:block cursor-pointer whitespace-nowrap"

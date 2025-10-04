@@ -19,11 +19,11 @@ export const LinkButton = (props: ButtonProps) => {
 
   const variantClass = () => {
     if (variant === "primary") {
-      return "text-background bg-primary-100 hover:bg-primary-100/80 focus-visible:ring-2 focus-visible:ring-primary-200/20";
+      return "text-background bg-primary-100 hover:bg-primary-100/80 focus-visible:ring-2 focus-visible:ring-primary-200/20 border border-transparent";
     } else if (variant === "secondary") {
-      return "text-background bg-primary-200 hover:text-primary-200 hover:bg-background/80 hover:border-2 hover:border-primary-200 focus-visible:ring-2 focus-visible:ring-primary-200/20";
+      return "text-background bg-primary-200 hover:text-primary-200 hover:bg-background/80 border-2 border-transparent hover:border-primary-200 focus-visible:ring-2 focus-visible:ring-primary-200/20";
     } else if (variant === "transparent") {
-      return "bg-transparent border-0 focus:outline-primary-500";
+      return "bg-transparent border border-transparent focus:outline-primary-500";
     } else {
       return "text-dark bg-background hover:bg-primary-100 border border-[#D1D1D1]";
     }
