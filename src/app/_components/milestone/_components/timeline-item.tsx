@@ -94,7 +94,7 @@ const TimelineItem = ({
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover object-top"
               priority
-              quality={90}
+              
             />
           </div>
         </motion.div>

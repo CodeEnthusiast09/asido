@@ -33,7 +33,7 @@ export const Navbar = () => {
               sizes="(max-width: 768px) 120px, (max-width: 1024px) 140px, 164px"
               className="object-contain"
               priority
-              quality={90}
+             
             />
           </div>
         </Link>

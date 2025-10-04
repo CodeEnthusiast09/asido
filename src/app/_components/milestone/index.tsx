@@ -3,7 +3,7 @@ import Timeline from "./_components/timeline";
 
 const MileStone = () => {
   return (
-    <div>
+    <div className="relative">
       <LayoutHeader />
 
       <div className="px-[18px] pb-[60px]">

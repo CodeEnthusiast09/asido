@@ -17,7 +17,7 @@ export default function Home() {
           sizes="100vw"
           className="object-cover hidden md:block"
           priority
-          quality={90}
+          
         />
 
         <Image
@@ -27,7 +27,7 @@ export default function Home() {
           sizes="100vw"
           className="object-cover block md:hidden"
           priority
-          quality={90}
+          
         />
       </section>
 
