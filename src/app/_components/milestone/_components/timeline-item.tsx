@@ -1,10 +1,12 @@
 "use client";
+
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { TimelineProps } from "./types";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { FaChevronRight } from "react-icons/fa";
+import type { MotionValue } from "framer-motion";
 
 const TimelineItem = ({
   year,
@@ -14,12 +16,76 @@ const TimelineItem = ({
   description,
   image,
   more,
+  isLast,
   isLeft = true,
-}: TimelineProps & { isLeft?: boolean }) => {
+  // extras passed down from parent:
+  progressMotion,
+  containerRef,
+  isScrollingDown = true,
+}: TimelineProps) => {
+  // ref used for "in view" detection for triggering content animations
+  const itemRef = useRef<HTMLDivElement>(null);
+  // ref for the small circle node so we can compute its position relative to the container
+  const circleRef = useRef<HTMLDivElement>(null);
+
+  // detect when this item enters viewport (used together with scroll direction)
+  const inView = useInView(itemRef, { amount: 0.3 });
+
+  // animate content only once and only when scrolling down
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    if (inView && isScrollingDown && !animated) {
+      setAnimated(true);
+    }
+  }, [inView, isScrollingDown, animated]);
+
+  // nodeViewed is controlled by the animated line position:
+  // when lineHeightPx >= circleCenterRelativeToContainer => active
   const [nodeViewed, setNodeViewed] = useState(false);
+
+  useEffect(() => {
+    if (!progressMotion || !containerRef?.current) return;
+
+    const handler = (v: number) => {
+      if (!containerRef.current || !circleRef.current) return;
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const circleRect = circleRef.current.getBoundingClientRect();
+
+      // circle center relative to the top of the container
+      const nodeCenter =
+        circleRect.top - containerRect.top + circleRect.height / 2;
+      const animatedLineHeight = v * containerRect.height; // pixels
+
+      const active = animatedLineHeight + 25 >= nodeCenter;
+
+      setNodeViewed(active);
+    };
+
+    // subscribe to changes on the motion value
+    const unsubscribe = progressMotion.on("change", handler);
+
+    // initial check
+    handler(progressMotion.get());
+
+    // re-check on resize (container height changes)
+    const onResize = () => handler(progressMotion.get());
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener("resize", onResize);
+    };
+  }, [progressMotion, containerRef]);
+
+  const variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <div
+      ref={itemRef}
       className={`relative pl-8 lg:pl-0 ${
         isLeft
           ? "lg:pr-[calc(50%+2rem)] lg:text-right"
@@ -27,64 +93,59 @@ const TimelineItem = ({
       }`}
     >
       {year && (
+        // circle node — controlled by nodeViewed (no more onViewportEnter/Leave)
         <motion.div
-          className={`absolute -left-[7.5px] lg:left-1/2 lg:-translate-x-1/2 top-[0.495rem] lg:top-[1.3rem] w-4 h-4 border-4 rounded-full shadow-md transition-colors duration-500 ${
+          ref={circleRef}
+          className={`absolute -left-[7.5px] lg:left-1/2 lg:-translate-x-1/2 top-[0.675rem] w-4 h-4 border-4 rounded-full shadow-md transition-colors duration-500 ${
             nodeViewed
-              ? "bg-primary-100 border-primary-100"
+              ? "bg-[#0044b5] border-[#0044b5]"
               : "bg-[#E7E9F5] border-[#E7E9F5]"
           }`}
-          onViewportEnter={() => setNodeViewed(true)}
-          onViewportLeave={() => setNodeViewed(false)}
-          viewport={{ once: false, amount: 0.3 }}
         />
       )}
 
-      {/* Year Label */}
       {year && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
+          initial="hidden"
+          animate={animated ? "visible" : "hidden"}
+          variants={variants}
           transition={{ duration: 0.5, delay: index * 0.1 }}
-          className="font-extrabold text-2xl lg:text-[39px] text-primary-100 mb-8"
+          className="font-extrabold text-2xl text-[#0044b5] mb-8"
         >
           {year}
         </motion.div>
       )}
 
-      {/* Title */}
       {title && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          initial="hidden"
+          animate={animated ? "visible" : "hidden"}
+          variants={variants}
           transition={{ duration: 0.5, delay: index * 0.1 + 0.1 }}
-          className={`text-base lg:text-2xl font-semibold mb-3 ${titleTextColor}`}
+          className={`text-base font-semibold mb-3 ${titleTextColor}`}
         >
           {title}
         </motion.div>
       )}
 
-      {/* Description */}
       {description && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.5, delay: index * 0.1 + 0.1 }}
-          className="text-xl text-[25px] font-bold mb-8 text-foreground"
+          initial="hidden"
+          animate={animated ? "visible" : "hidden"}
+          variants={variants}
+          transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+          className="text-xl font-bold mb-8 text-foreground"
         >
           {description}
         </motion.div>
       )}
 
-      {/* Image */}
       {image && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+          initial="hidden"
+          animate={animated ? "visible" : "hidden"}
+          variants={variants}
+          transition={{ duration: 0.5, delay: index * 0.1 + 0.3 }}
         >
           <div className="relative w-full h-[300px] md:h-[400px]">
             <Image
@@ -94,24 +155,22 @@ const TimelineItem = ({
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover object-top"
               priority
-              
             />
           </div>
         </motion.div>
       )}
 
-      {/* Learn More Link */}
       {more && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.3 }}
-          transition={{ duration: 0.5, delay: index * 0.1 + 0.2 }}
+          initial="hidden"
+          animate={animated ? "visible" : "hidden"}
+          variants={variants}
+          transition={{ duration: 0.5, delay: index * 0.1 + 0.4 }}
           className={`mt-8 ${isLeft ? "lg:flex lg:justify-end" : ""}`}
         >
           <Link
             href={more}
-            className="inline-flex items-center font-bold text-nowrap text-primary-100 hover:no-underline cursor-pointer md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 focus-visible:ring-offset-2 transition-colors"
+            className="inline-flex items-center font-bold text-nowrap text-[#0044b5] hover:no-underline cursor-pointer md:text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 focus-visible:ring-offset-2 transition-colors"
           >
             LEARN MORE
             <FaChevronRight size={16} className="ml-3.5 md:w-5 md:h-5" />
